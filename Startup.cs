@@ -16,9 +16,14 @@ namespace BiharPaymentGateway
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
             Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -32,6 +37,11 @@ namespace BiharPaymentGateway
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BiharPaymentGateway", Version = "v1" });
             });
+            // Add functionality to inject IOptions<T>
+            services.AddOptions();
+
+            // Add our Config object so it can be injected
+            services.Configure<dynamic>(Configuration.GetSection("MerchantSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

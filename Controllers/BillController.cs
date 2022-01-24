@@ -5,6 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using biharService;
+using BiharPaymentGateway.Functions;
+using System.Text;
 
 namespace BiharPaymentGateway.Controllers
 {
@@ -13,50 +17,41 @@ namespace BiharPaymentGateway.Controllers
     public class BillController : ControllerBase
     {
         private readonly ILogger<BillController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public BillController( ILogger<BillController> logger)
+        public BillController( ILogger<BillController> logger, IConfiguration configuration)
         {
-
+            this._configuration = configuration;
             this._logger = logger;
         }
         
-
-
-  
-
-        //[HttpGet]
-        //public IEnumerable<WeatherForecast> Get()
-        //{
-        //    var rng = new Random();
-        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = DateTime.Now.AddDays(index),
-        //        TemperatureC = rng.Next(-20, 55),
-        //        Summary = Summaries[rng.Next(Summaries.Length)]
-        //    })
-        //    .ToArray();
-        //}
-        [HttpGet("{id}")]
-        public BillDetails Get(long CANumber)
+        [HttpGet("{CANumber}")]
+        public BillDetailsStruct Get(long CANumber)
         {
-            return new BillDetails
+            BillDetailsStruct response = new BillDetailsStruct();
+            var merchantCode = _configuration.GetValue<string>("MerchantSettings:MerchantCode");
+            var merchantPasscode = _configuration.GetValue<string>("MerchantSettings:MerchantPassword");
+            var checksumKey = _configuration.GetValue<string>("MerchantSettings:ChecksumPrivateKey");
+            
+           
+            var endPoint = biharService.BillInterfaceSoapClient.EndpointConfiguration.BillInterfaceSoap;
+            biharService.BillInterfaceSoapClient client = new biharService.BillInterfaceSoapClient(endPoint);
+            using (client)
             {
-                Division = "BARAUNI",
-                CANumber = 232305030671,
-                ConsumerName = "KAUSHALYA DEVI",
-                CompanyName = "SOUTH  BIHAR POWER DISTRIBUTION COMPANY LTD.",
-                InvoiceNO = "2016061162000005",
-                BillMonth = "JUN-16",
-                DueDate = DateTime.Now,
-                Amount = 100,
-                ErrorMessage = ""
-
-            };
-
+                response = client.BillDetails(CANumber.ToString(), "", "", "", merchantCode, merchantPasscode);
+            }
+            return response;
         }
+
         //[HttpPost]
         //public string Post(PaymentDetails data)
         //{
+        //    var arrayOfBytes = Encoding.ASCII.GetBytes("10");//1266344399
+        //    //var arrayOfBytes = Encoding.ASCII.GetBytes("5");//3192113243
+
+        //    var crc32 = new Crc32();
+        //    Console.WriteLine(crc32.Get(arrayOfBytes).ToString("X"));
+
         //    return "";
         //}
     }
