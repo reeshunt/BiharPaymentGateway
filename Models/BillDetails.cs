@@ -7,19 +7,19 @@ namespace BiharPaymentGateway.Models
 {
     public class BillDetails
     {
-        public long CANumber { get; set; }
-        public string ConsumerName { get; set; }
-        public string Address { get; set; }
-        public string EmailAddress { get; set; }
-        public string MobileNumber { get; set; }
-        public string Division { get; set; }
-        public string SubDivision { get; set; }
-        public string LT_HT { get; set; }
-        public string CompanyName { get; set; }
-        public string InvoiceNO { get; set; }
-        public string BillMonth { get; set; }
-        public DateTime DueDate { get; set; }
-        public int Amount { get; set; }
-        public string ErrorMessage { get; set; }
+        public string CANumber{ get; set; }
+        public string InvoiceNo{ get; set; }
+        public string DueDate{ get; set; }
+        public string Amount{ get; set; }
+        public string CompanyCode{ get; set; }
+        public string TransactionId{ get; set; }
+        public string TransactionDateTime{ get; set; }
+        public string ReceiptNo{ get; set; }
+        public string BankRefCode{ get; set; }
+        public string BankId{ get; set; } 
+        public string PaymentMode{ get; set; }
+        public string MerchantCode{ get; set; }
+        public string MerchantPassword{ get; set; }
+        public string CkeckSum { get; set; }
     }
 }
