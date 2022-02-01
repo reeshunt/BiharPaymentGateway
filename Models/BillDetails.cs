@@ -7,6 +7,7 @@ namespace BiharPaymentGateway.Models
 {
     public class BillDetails
     {
+        public int Id { get; set; }
         public string CANumber{ get; set; }
         public string InvoiceNo{ get; set; }
         public string DueDate{ get; set; }

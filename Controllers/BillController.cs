@@ -33,16 +33,19 @@ namespace BiharPaymentGateway.Controllers
             strChecksumKey = _configuration.GetValue<string>("MerchantSettings:ChecksumPrivateKey");
 
         }
-        
-        [HttpGet("{CANumber}/{strDivision?}/{strSubDivision?}/{strLegacyNo?}")]
-        public async Task<BillDetailsStruct> Get(string CANumber, string strDivision, string strSubDivision, string strLegacyNo)
+
+        //[Route("{CANumber}/{strDivision:string=""}/{strSubDivision:string=""}/{strLegacyNo:string=""}")]
+        [HttpGet()]
+        [Route("{CANumber}")]
+        //[HttpGet("{CANumber}/{strDivision?}/{strSubDivision?}/{strLegacyNo?}")]
+        public async Task<BillDetailsStruct> Get(string CANumber /*, string? strDivision = null, string? strSubDivision = null, string? strLegacyNo = null*/)
         {
             BillDetailsStruct response = new BillDetailsStruct();
             EndpointConfiguration endPoint = biharService.BillInterfaceSoapClient.EndpointConfiguration.BillInterfaceSoap;
             biharService.BillInterfaceSoapClient client = new biharService.BillInterfaceSoapClient(endPoint);
             using (client)
             {
-                response = await client.BillDetailsAsync(CANumber, strDivision, strSubDivision, strLegacyNo, strMerchantCode, strMerchantPasscode);
+                response = await client.BillDetailsAsync(CANumber, "", "", "", strMerchantCode, strMerchantPasscode);
             }
             return response;
         }
